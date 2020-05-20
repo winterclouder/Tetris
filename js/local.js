@@ -1,24 +1,32 @@
 var Local = function () {
   var game
-
+  var INTERVAL = 200
+  var timer = null
   var bindKeyEvent = function() {
     document.onkeydown = function(e) {
       if(e.keyCode == 38) {
-        console.log('up')
+        game.roates()
       }else if(e.keyCode == 39) {
-        console.log('right')
+        game.right()
       }else if(e.keyCode == 40) {
-        console.log('down')
         game.down()
       }else if(e.keyCode == 37) {
-        console.log('left')
+        game.left()
       }else if(e.keyCode == 32) {
-        console.log('space')
+        game.fall()
       } else {
-        console.log('down')
+
       }
     }
   }
+
+  var move = function() {
+    if (!game.down()) {
+      game.fixed()
+    }
+
+  }
+
   var start = function() {
     var doms =  {
       gameDiv: document.getElementById('game'),
@@ -27,6 +35,7 @@ var Local = function () {
     game = new Game()
     game.init(doms)
     bindKeyEvent()
+    timer = setInterval(move, INTERVAL)
   }
   this.start = start
 }

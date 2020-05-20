@@ -45,8 +45,6 @@ var Game = function () {
   }
 
   var refreshDiv = function (data, divs) {
-    console.log(data)
-    console.log(divs)
     for (let i = 0; i < data.length; i++) {
       for (let j = 0; j < data[0].length; j++) {
         if (data[i][j] == 0) {
@@ -62,14 +60,10 @@ var Game = function () {
 
   // 檢查點
   var check = function (pos, x, y) {
-    console.log(pos)
-    console.log(x)
-    console.log(y)
 
     if (pos.x + x < 0) {
       return false
     } else if (pos.x + x >= gameData.length) {
-
       return false
     } else if (pos.y + y < 0) {
 
@@ -120,26 +114,67 @@ var Game = function () {
     }
   }
 
-  var down = function () {
-    // console.log(cur.canDown(isValid))
-
-    if (cur.canDown(isValid)) {
+  // 旋轉
+  var roates = function () {
+    if (cur.canRotate(isValid)) {
       clearData()
-      cur.down()
+      cur.rotate()
       setData()
       refreshDiv(gameData, gameDivs)
     }
   }
 
+  // 下移
+  var down = function () {
+    if (cur.canDown(isValid)) {
+      clearData()
+      cur.down()
+      setData()
+      refreshDiv(gameData, gameDivs)
+      return true
+    } else {
+      return false
+    }
+  }
+  // 左移
+  var left = function () {
+    if (cur.canLeft(isValid)) {
+      clearData()
+      cur.left()
+      setData()
+      refreshDiv(gameData, gameDivs)
+    }
+  }
+  // 右移
+  var right = function () {
+    if (cur.canRight(isValid)) {
+      clearData()
+      cur.right()
+      setData()
+      refreshDiv(gameData, gameDivs)
+    }
+  }
+
+  var fixed = function() {
+    for (let i = 0; i < cur.data.length; i++) {
+      for (let j = 0; j < cur.data[0].length; j++) {
+        if(check(cur.origin,i,j)) {
+          if(gameData[cur.origin.x + i][cur.origin.y+j] == 2) {
+            gameData[cur.origin.x + i][cur.origin.y + j] = 1
+          }
+        }
+      }
+    }
+    refreshDiv(gameData, gameDivs)
+  }
+
   var init = function (doms) {
     gameDiv = doms.gameDiv
     nextDiv = doms.nextDiv
-    cur = new Square()
-    next = new Square()
+    cur = SquareFactory.prototype.make(2, 2)
+    next = SquareFactory.prototype.make(3, 3)
     initDiv(gameDiv, gameData, gameDivs)
     initDiv(nextDiv, next.data, nextDivs)
-    cur.origin.x = 5
-    cur.origin.y = 5
     setData()
     refreshDiv(gameData, gameDivs)
     refreshDiv(next.data, nextDivs)
@@ -147,4 +182,11 @@ var Game = function () {
 
   this.init = init
   this.down = down
+  this.left = left
+  this.right = right
+  this.roates = roates
+  this.fixed = fixed
+  this.fall = function() { while (down()) {
+
+  } }
 }
