@@ -1,6 +1,7 @@
 var Game = function () {
   var gameDiv
   var nextDiv
+  var resultDiv
   var gameData = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -212,6 +213,7 @@ var Game = function () {
     gameDiv = doms.gameDiv
     nextDiv = doms.nextDiv
     timeDiv = doms.timeDiv
+    resultDiv = doms.resultDiv
     scoreDiv = doms.scoreDiv
     console.log(doms)
     next = SquareFactory.prototype.make(type, dir)
@@ -247,6 +249,30 @@ var Game = function () {
     scoreDiv.innerHTML = score
   }
 
+  // 遊戲結束
+  var gameOver = function(win) {
+    if(win) {
+      resultDiv.innerHTML = "You Win"
+    } else {
+      resultDiv.innerHTML = 'You Lose'
+    }
+  }
+
+  // 底部增加行
+  var addTailLine = function(lines) {
+    for (let i = 0; i < gameData.length - lines.length; i++) {
+      gameData[i] = gameData[i + lines.length]
+    }
+    for (let i = 0; i < lines.length; i++) {
+      gameData[gameData.length - lines.length + i] = lines[i]
+    }
+    cur.origin.x = cur.origin.x - lines.length
+    if(cur.origin.x< 0) {
+      cur.origin.x = 0
+    }
+    refreshDiv(gameData,gameDivs)
+  }
+
   this.init = init
   this.down = down
   this.left = left
@@ -258,6 +284,8 @@ var Game = function () {
   this.checkGameOver = checkGameOver
   this.setTime = setTime
   this.addScore = addScore
+  this.gameOver = gameOver
+  this.addTailLine = addTailLine
   this.fall = function () {
     while (down()) {}
   }

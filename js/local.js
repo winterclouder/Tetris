@@ -1,6 +1,6 @@
 var Local = function () {
   var game
-  var INTERVAL = 200
+  var INTERVAL = 333
   var timer = null
   var timeCount = 0
   var time = 0
@@ -35,6 +35,7 @@ var Local = function () {
       console.log(gameOver)
       if (gameOver) {
         stop()
+        game.gameOver()
       } else {
         game.performNext(generateType(), generateDir())
       }
@@ -43,10 +44,12 @@ var Local = function () {
 
   var timeFunc =  function(){
     timeCount = timeCount + 1
-    if (timeCount == 5) {
+    if (timeCount == 3) {
       timeCount = 0
       time = time + 1
       game.setTime(time)
+      if (time % 10 == 0)
+        game.addTailLine(generateLine(1))
     }
   }
 
@@ -59,11 +62,12 @@ var Local = function () {
   }
 
   var start = function() {
-    var doms =  {
+    var doms = {
       gameDiv: document.getElementById('game'),
       nextDiv: document.getElementById('next'),
       timeDiv: document.getElementById('time'),
-      scoreDiv: document.getElementById('score')
+      scoreDiv: document.getElementById('score'),
+      resultDiv: document.getElementById('gameover'),
     }
     game = new Game()
     game.init(doms, generateType(), generateDir())
@@ -80,6 +84,18 @@ var Local = function () {
     }
   }
 
+  // random add lines
+  var generateLine = function(lineNum) {
+    var lines = []
+    for (let i = 0; i < lineNum; i++) {
+      var line = []
+      for (let j = 0; j < 10; j++) {
+        line.push(Math.ceil(Math.random()*2)-1)
+      }
+      lines.push(line)
+    }
+    return lines
+  }
 
   this.start = start
 }

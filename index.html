@@ -7,11 +7,16 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div class="game" id="game"></div>
-  <div class="next" id="next"></div>
-  <div class="info">
-    <div>已用時: <span id="time">0</span>s</div>
-    <div>已得分: <span id="score">0</span>分</div>
+  <div>請問方向鍵及空白鍵進行操作: 左->左移, 右->右移, 下->快速下移, 空白:選轉</div>
+  <div class="squre" id="local">
+    <div class="title">我的遊戲區域</div>
+    <div class="game" id="game"></div>
+    <div class="next" id="next"></div>
+    <div class="info">
+      <div>已用時: <span id="time">0</span>s</div>
+      <div>已得分: <span id="score">0</span>分</div>
+      <div><span id="gameover"></span></div>
+    </div>
   </div>
   <script src="js/local.js"></script>
   <script src="js/remote.js"></script>

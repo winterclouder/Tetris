@@ -6,7 +6,7 @@
   border-right: 1px solid blue;
   border-bottom: 1px solid blue;
   position: absolute;
-  top: 10px;
+  top: 60px;
   left: 10px;
 }
 
@@ -15,14 +15,14 @@
   height: 80px;
   background-color: #F2FAFF;
   position: absolute;
-  top: 10px;
+  top: 60px;
   left: 250px;
   border: 1px solid blue;
 }
 
 .info{
   position: absolute;
-  top: 100px;
+  top: 150px;
   left: 250px;
 }
 
