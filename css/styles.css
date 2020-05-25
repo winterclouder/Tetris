@@ -43,3 +43,9 @@
   background-color: rgb(77, 77, 77);
   border: 1px solid rgb(48, 47, 47);
 }
+
+.startbtn{
+  position: absolute;
+  top: 500px;
+  left: 20px;
+}

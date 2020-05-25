@@ -1,29 +1,30 @@
 var Local = function () {
   var game
-  var INTERVAL = 333
+  var INTERVAL = 200
   var timer = null
   var timeCount = 0
   var time = 0
-  var bindKeyEvent = function() {
-    document.onkeydown = function(e) {
-      if(e.keyCode == 38) {
-
-      }else if(e.keyCode == 39) {
+  var remainingTime = 0
+  var bindKeyEvent = function () {
+    document.onkeydown = function (e) {
+      if (e.keyCode == 38) {
+        // game.roates()
+      } else if (e.keyCode == 39) {
         game.right()
-      }else if(e.keyCode == 40) {
+      } else if (e.keyCode == 40) {
         game.fall()
         // game.down()
-      }else if(e.keyCode == 37) {
+      } else if (e.keyCode == 37) {
         game.left()
-      }else if(e.keyCode == 32) {
+      } else if (e.keyCode == 32) {
+        // space
         game.roates()
       } else {
-
       }
     }
   }
 
-  var move = function() {
+  var move = function () {
     timeFunc()
     if (!game.down()) {
       game.fixed()
@@ -42,26 +43,25 @@ var Local = function () {
     }
   }
 
-  var timeFunc =  function(){
+  var timeFunc = function () {
     timeCount = timeCount + 1
-    if (timeCount == 3) {
+    if (timeCount == 5) {
       timeCount = 0
       time = time + 1
       game.setTime(time)
-      if (time % 10 == 0)
-        game.addTailLine(generateLine(1))
+      if (time % 20 == 0) game.addTailLine(generateLine(1))
     }
   }
 
-  var generateType = function() {
-   return Math.ceil(Math.random() * 7) - 1
+  var generateType = function () {
+    return Math.ceil(Math.random() * 7) - 1
   }
 
   var generateDir = function () {
     return Math.ceil(Math.random() * 4) - 1
   }
 
-  var start = function() {
+  var start = function () {
     var doms = {
       gameDiv: document.getElementById('game'),
       nextDiv: document.getElementById('next'),
@@ -75,22 +75,34 @@ var Local = function () {
     game.performNext(generateType(), generateDir())
     timer = setInterval(move, INTERVAL)
   }
-
-  var stop = function() {
-    if(timer) {
+  var stop = function () {
+    if (timer) {
       clearInterval(timer)
       timer = null
       document.onkeydown = null
     }
   }
 
+  var pause = function () {
+    clearInterval(timer)
+  }
+
+  var resume = function () {
+    clearTimeout(timer)
+    setTimeout(callback, remainingTime)
+  }
+
+  var callback = function () {
+    timer = window.setInterval(move, INTERVAL)
+  }
+
   // random add lines
-  var generateLine = function(lineNum) {
+  var generateLine = function (lineNum) {
     var lines = []
     for (let i = 0; i < lineNum; i++) {
       var line = []
       for (let j = 0; j < 10; j++) {
-        line.push(Math.ceil(Math.random()*2)-1)
+        line.push(Math.ceil(Math.random() * 2) - 1)
       }
       lines.push(line)
     }
@@ -98,4 +110,7 @@ var Local = function () {
   }
 
   this.start = start
+  this.pause = pause
+  this.resume = resume
+  this.stop = stop
 }
