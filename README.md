@@ -1,3 +1,5 @@
 # Tetris
-Try It
-## 
+Tetris game
+
+## with socket io
+![Screenshot](/img/screenshot.png)

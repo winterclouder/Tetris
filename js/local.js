@@ -1,4 +1,4 @@
-var Local = function () {
+var Local = function (socket) {
   var game
   var INTERVAL = 200
   var timer = null
@@ -11,14 +11,18 @@ var Local = function () {
         // game.roates()
       } else if (e.keyCode == 39) {
         game.right()
+        socket.emit('right')
       } else if (e.keyCode == 40) {
         game.fall()
+        socket.emit('fall')
         // game.down()
       } else if (e.keyCode == 37) {
         game.left()
+        socket.emit('left')
       } else if (e.keyCode == 32) {
         // space
         game.roates()
+        socket.emit('roate')
       } else {
       }
     }
@@ -28,9 +32,11 @@ var Local = function () {
     timeFunc()
     if (!game.down()) {
       game.fixed()
+      socket.emit('fixed')
       var line = game.checkClear()
       if (line) {
         game.addScore(line)
+        socket.emit('line', line)
       }
       var gameOver = game.checkGameOver()
       console.log(gameOver)
@@ -38,8 +44,14 @@ var Local = function () {
         stop()
         game.gameOver()
       } else {
-        game.performNext(generateType(), generateDir())
+            bindKeyEvent()
+            var t = generateType()
+            var d = generateDir()
+            socket.emit('next', {type: t, dir: d})
+        game.performNext(t, d)
       }
+    } else {
+      socket.emit('down')
     }
   }
 
@@ -49,7 +61,7 @@ var Local = function () {
       timeCount = 0
       time = time + 1
       game.setTime(time)
-      if (time % 20 == 0) game.addTailLine(generateLine(1))
+      // if (time % 20 == 0) game.addTailLine(generateLine(1))
     }
   }
 
@@ -63,16 +75,22 @@ var Local = function () {
 
   var start = function () {
     var doms = {
-      gameDiv: document.getElementById('game'),
-      nextDiv: document.getElementById('next'),
-      timeDiv: document.getElementById('time'),
-      scoreDiv: document.getElementById('score'),
-      resultDiv: document.getElementById('gameover'),
+      gameDiv: document.getElementById('local_game'),
+      nextDiv: document.getElementById('local_next'),
+      timeDiv: document.getElementById('local_time'),
+      scoreDiv: document.getElementById('local_score'),
+      resultDiv: document.getElementById('local_gameover'),
     }
     game = new Game()
-    game.init(doms, generateType(), generateDir())
+    var type = generateType()
+    var dir = generateDir()
+    socket.emit('init',{type:type, dir:dir})
+    game.init(doms, type, dir)
     bindKeyEvent()
-    game.performNext(generateType(), generateDir())
+        var t = generateType()
+        var d = generateDir()
+        socket.emit('next', {type: t, dir: d})
+    game.performNext(t, d)
     timer = setInterval(move, INTERVAL)
   }
   var stop = function () {
@@ -109,8 +127,14 @@ var Local = function () {
     return lines
   }
 
-  this.start = start
-  this.pause = pause
-  this.resume = resume
-  this.stop = stop
+  socket.on('start', () => {
+    console.log('遊戲開始')
+    document.getElementById('wating').innerHTML = '遊戲開始'
+    start()
+  })
+
+  // this.start = start
+  // this.pause = pause
+  // this.resume = resume
+  // this.stop = stop
 }
